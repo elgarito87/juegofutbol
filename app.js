@@ -58,17 +58,88 @@ const computeY = (x) => {
 };
 
 const drawField = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const width = canvas.width;
+  const height = canvas.height;
 
-  ctx.save();
-  ctx.strokeStyle = "rgba(255,255,255,0.8)";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(fieldPadding, fieldPadding, canvas.width - fieldPadding * 2, canvas.height - fieldPadding * 2);
-  ctx.restore();
+  // 1. Dibujar césped (franjas)
+  const stripeHeight = 40;
+  const numStripes = Math.ceil(height / stripeHeight);
 
+  for (let i = 0; i < numStripes; i++) {
+    ctx.fillStyle = i % 2 === 0 ? "#4ade80" : "#22c55e"; // Tonos de verde
+    ctx.fillRect(0, i * stripeHeight, width, stripeHeight);
+  }
+
+  // 2. Dibujar líneas del campo
   ctx.save();
-  ctx.fillStyle = "rgba(255,255,255,0.2)";
-  ctx.fillRect(fieldPadding, canvas.height / 2 - 2, canvas.width - fieldPadding * 2, 4);
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+  ctx.lineWidth = 3;
+
+  // Borde exterior
+  ctx.strokeRect(fieldPadding, fieldPadding, width - fieldPadding * 2, height - fieldPadding * 2);
+
+  const fieldW = width - fieldPadding * 2;
+  const fieldH = height - fieldPadding * 2;
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  // Línea de medio campo
+  ctx.beginPath();
+  ctx.moveTo(centerX, fieldPadding);
+  ctx.lineTo(centerX, height - fieldPadding);
+  ctx.stroke();
+
+  // Círculo central
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 50, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Punto central
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Área grande (izquierda - portería propia simulada si fuera necesario, pero aquí solo dibujamos la izquierda y derecha para contexto)
+  // En este "tiro libre", asumimos que tiramos hacia la derecha (donde está el portero).
+  // Dibujemos el área penal en el lado derecho (destino) y una línea de banda.
+
+  // Área penal derecha (donde está el portero)
+  const penaltyBoxWidth = 120;
+  const penaltyBoxHeight = 240;
+  const goalAreaWidth = 40;
+  const goalAreaHeight = 100;
+
+  // Coordenadas base del lado derecho (línea de meta)
+  const rightGoalLineX = width - fieldPadding;
+  const goalCenterY = height / 2;
+
+  // Área grande
+  ctx.strokeRect(rightGoalLineX - penaltyBoxWidth, goalCenterY - penaltyBoxHeight / 2, penaltyBoxWidth, penaltyBoxHeight);
+
+  // Área chica
+  ctx.strokeRect(rightGoalLineX - goalAreaWidth, goalCenterY - goalAreaHeight / 2, goalAreaWidth, goalAreaHeight);
+
+  // Punto penal
+  ctx.beginPath();
+  ctx.arc(rightGoalLineX - 80, goalCenterY, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Arco del área (semicírculo)
+  ctx.beginPath();
+  ctx.arc(rightGoalLineX - 80, goalCenterY, 50, 0.65 * Math.PI, 1.35 * Math.PI);
+  ctx.stroke();
+
+  // Portería (postes visuales)
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "#e5e7eb";
+  ctx.beginPath();
+  ctx.moveTo(rightGoalLineX, goalCenterY - 60); // Poste superior
+  ctx.lineTo(rightGoalLineX + 15, goalCenterY - 60);
+  ctx.moveTo(rightGoalLineX, goalCenterY + 60); // Poste inferior
+  ctx.lineTo(rightGoalLineX + 15, goalCenterY + 60);
+  ctx.stroke();
+
   ctx.restore();
 };
 
@@ -79,8 +150,23 @@ const drawWall = () => {
   const wallHeightPx = canvas.height - fieldPadding - y;
 
   ctx.save();
-  ctx.fillStyle = "#111827";
-  ctx.fillRect(x - wallWidth / 2, y, wallWidth, wallHeightPx);
+  // Sombra de la barrera
+  ctx.fillStyle = "rgba(0,0,0,0.3)";
+  ctx.fillRect(x - wallWidth / 2 + 5, y + 5, wallWidth, wallHeightPx);
+
+  // Barrera (siluetas estilizadas)
+  ctx.fillStyle = "#1e293b"; // Color uniforme camiseta
+  // Dibujar 3 figuras simples para simular barrera
+  const playerWidth = wallWidth / 3;
+  for (let i = 0; i < 3; i++) {
+    const px = x - wallWidth / 2 + i * playerWidth;
+    // Cuerpo
+    ctx.fillRect(px, y, playerWidth - 2, wallHeightPx);
+    // Cabeza
+    ctx.beginPath();
+    ctx.arc(px + playerWidth / 2 - 1, y, playerWidth / 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
   ctx.restore();
 };
 
@@ -91,8 +177,38 @@ const drawKeeper = () => {
   const keeperHeightPx = canvas.height - fieldPadding - y;
 
   ctx.save();
-  ctx.fillStyle = "#ef4444";
-  ctx.fillRect(x - keeperWidth / 2, y, keeperWidth, keeperHeightPx);
+
+  // Sombra
+  ctx.fillStyle = "rgba(0,0,0,0.3)";
+  ctx.beginPath();
+  ctx.ellipse(x + 5, canvas.height - fieldPadding, 15, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Portero estilizado
+  ctx.fillStyle = "#ef4444"; // Camiseta roja
+
+  // Cuerpo
+  ctx.fillRect(x - 10, y, 20, keeperHeightPx);
+
+  // Cabeza
+  ctx.beginPath();
+  ctx.arc(x, y, 10, 0, Math.PI * 2);
+  ctx.fillStyle = "#fecaca"; // Piel
+  ctx.fill();
+
+  // Brazos (simulando posición de alerta)
+  ctx.strokeStyle = "#ef4444";
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(x - 10, y + 10);
+  ctx.lineTo(x - 25, y - 5); // Brazo izquierdo arriba
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(x + 10, y + 10);
+  ctx.lineTo(x + 25, y - 5); // Brazo derecho arriba
+  ctx.stroke();
+
   ctx.restore();
 };
 
@@ -125,10 +241,49 @@ const drawBall = () => {
   const { x: canvasX, y: canvasY } = toCanvasCoords(x, y);
 
   ctx.save();
-  ctx.fillStyle = "#f59e0b";
+
+  // Sombra en el suelo (perspectiva simple)
+  // Calculamos la altura visual sobre el "suelo" (y=0) para atenuar la sombra
+  const groundY = 0;
+  const heightAboveGround = y;
+  const { x: groundCanvasX, y: groundCanvasY } = toCanvasCoords(x, 0);
+
+  const shadowAlpha = Math.max(0, 0.4 - heightAboveGround * 0.1);
+  const shadowScale = Math.max(0.5, 1 - heightAboveGround * 0.2);
+
+  ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
   ctx.beginPath();
-  ctx.arc(canvasX, canvasY, 12, 0, Math.PI * 2);
+  ctx.ellipse(groundCanvasX, groundCanvasY, 12 * shadowScale, 6 * shadowScale, 0, 0, Math.PI * 2);
   ctx.fill();
+
+  // Balón
+  ctx.translate(canvasX, canvasY);
+  // Rotación basada en el avance para dar efecto de rodar/girar
+  ctx.rotate(progress * 20);
+
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(0, 0, 12, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Patrón simple (pentágonos simulados)
+  ctx.fillStyle = "#000";
+  ctx.beginPath();
+  ctx.moveTo(0, -12);
+  ctx.lineTo(4, -4);
+  ctx.lineTo(12, 0);
+  ctx.lineTo(4, 4);
+  ctx.lineTo(0, 12);
+  ctx.lineTo(-4, 4);
+  ctx.lineTo(-12, 0);
+  ctx.lineTo(-4, -4);
+  ctx.closePath();
+  ctx.fill();
+
   ctx.restore();
 };
 
