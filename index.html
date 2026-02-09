@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parábolas en el fútbol</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Laboratorio interactivo</p>
+          <h1>Parábolas que driblan al portero</h1>
+          <p class="subtitle">
+            Ajusta los coeficientes de la ecuación cuadrática y observa cómo cambia el
+            movimiento del balón cuando intenta superar la barrera y al guardameta.
+          </p>
+        </div>
+        <div class="equation" aria-live="polite">
+          y = <span id="eq-a">1.0</span>x² + <span id="eq-b">0.0</span>x +
+          <span id="eq-c">0.0</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="field">
+          <canvas id="fieldCanvas" width="900" height="520"></canvas>
+          <div class="legend">
+            <span class="legend-item ball">Balón</span>
+            <span class="legend-item path">Trayectoria</span>
+            <span class="legend-item wall">Barrera</span>
+            <span class="legend-item keeper">Portero</span>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <h2>Explora la ecuación</h2>
+          <p>
+            Cambia los valores de <strong>a</strong>, <strong>b</strong> y <strong>c</strong> para
+            ver cómo se abre la parábola, hacia qué lado se desplaza y en qué punto parte el
+            balón.
+          </p>
+
+          <div class="controls">
+            <label>
+              Coeficiente a (abre arriba o abajo)
+              <input type="range" id="coefA" min="-2" max="2" value="1" step="0.1" />
+              <span class="value" id="valA">1.0</span>
+            </label>
+            <label>
+              Coeficiente b (dirección horizontal)
+              <input type="range" id="coefB" min="-3" max="3" value="0" step="0.1" />
+              <span class="value" id="valB">0.0</span>
+            </label>
+            <label>
+              Coeficiente c (altura inicial)
+              <input type="range" id="coefC" min="-1" max="1" value="0" step="0.1" />
+              <span class="value" id="valC">0.0</span>
+            </label>
+          </div>
+
+          <div class="buttons">
+            <button id="playBtn">Iniciar tiro</button>
+            <button id="resetBtn" class="secondary">Reiniciar</button>
+          </div>
+
+          <div class="tips">
+            <h3>Preguntas guía</h3>
+            <ul>
+              <li>¿Qué ocurre si el coeficiente <strong>a</strong> es negativo?</li>
+              <li>¿Cómo cambia la altura máxima con <strong>c</strong>?</li>
+              <li>¿El balón supera la barrera cuando <strong>b</strong> es positivo?</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
