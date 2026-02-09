@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parábolas en el fútbol</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Laboratorio interactivo</p>
+          <h1>Parábolas vistas desde detrás del balón</h1>
+          <p class="subtitle">
+            Ajusta los coeficientes de la ecuación cuadrática y observa cómo cambia la
+            curva lateral del balón cuando lo pateas hacia el arco. La simulación está
+            diseñada desde la vista del portero para ver el drible en 3D.
+          </p>
+        </div>
+        <div class="equation" aria-live="polite">
+          x = <span id="eq-a">1.0</span>t² + <span id="eq-b">0.0</span>t +
+          <span id="eq-c">0.0</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="field">
+          <canvas id="fieldCanvas" width="960" height="540"></canvas>
+          <div class="legend">
+            <span class="legend-item ball">Balón</span>
+            <span class="legend-item path">Trayectoria</span>
+            <span class="legend-item wall">Barrera</span>
+            <span class="legend-item keeper">Portero</span>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <h2>Explora la ecuación</h2>
+          <p>
+            Cambia los valores de <strong>a</strong>, <strong>b</strong> y <strong>c</strong> para
+            ver cómo se curva el balón hacia la izquierda o la derecha mientras avanza hacia
+            el portero.
+          </p>
+
+          <div class="controls">
+            <label>
+              Coeficiente a (curvatura)
+              <input type="range" id="coefA" min="-6" max="6" value="1" step="0.1" />
+              <span class="value" id="valA">1.0</span>
+            </label>
+            <label>
+              Coeficiente b (dirección lateral)
+              <input type="range" id="coefB" min="-8" max="8" value="0" step="0.1" />
+              <span class="value" id="valB">0.0</span>
+            </label>
+            <label>
+              Coeficiente c (punto de inicio)
+              <input type="range" id="coefC" min="-4" max="4" value="0" step="0.1" />
+              <span class="value" id="valC">0.0</span>
+            </label>
+          </div>
+
+          <div class="buttons">
+            <button id="playBtn">Iniciar tiro</button>
+            <button id="resetBtn" class="secondary">Reiniciar</button>
+          </div>
+
+          <div class="tips">
+            <h3>Preguntas guía</h3>
+            <ul>
+              <li>¿Cómo cambia la curva cuando el coeficiente <strong>a</strong> es negativo?</li>
+              <li>¿Qué pasa si <strong>b</strong> empuja la pelota hacia el lado derecho?</li>
+              <li>¿En qué parte del arco termina el tiro si cambias <strong>c</strong>?</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
